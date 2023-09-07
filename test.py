@@ -55,26 +55,80 @@ for lang1 in languages:
 
 print(markdown)
 
-def dynamic_plot(matrix):
-    nt = Network(notebook=True, width="100%", height="750px", bgcolor="#222222", font_color="white", heading="")
-    
-    # Use remote resources
-    nt.use_CDN = True
+import dash
+import dash_cytoscape as cyto
+import dash_html_components as html
+from dash.dependencies import Input, Output
 
-    # Add nodes
-    for lang in matrix:
-        nt.add_node(lang)
+# Create a Dash application
+app = dash.Dash(__name__)
 
-    # Add edges
-    for lang1 in matrix:
-        for lang2 in matrix:
-            weight = matrix[lang1][lang2]
-            if lang1 != lang2:
-                nt.add_edge(lang1, lang2, value=weight/10.0)
-    
-    # Display the dynamic plot
-    nt.show("temp.html")
+# Preprocess data for Cytoscape format
+nodes = [{'data': {'id': lang, 'label': lang}} for lang in similarity_matrix]
+edges = [{'data': {'source': lang1, 'target': lang2, 'weight': similarity_matrix[lang1][lang2]}} for lang1 in similarity_matrix for lang2 in similarity_matrix if lang1 != lang2]
+elements = nodes + edges
 
-# Create the dynamic plot
-dynamic_plot(similarity_matrix)
+default_stylesheet = [
+    {
+        'selector': 'node',
+        'style': {
+            'background-color': '#0074D9',
+            'label': 'data(label)',
+            'font-size': '12px',
+            'text-valign': 'center',
+            'color': 'white',
+            'text-outline-color': '#0074D9',
+            'text-outline-width': '2px'
+        }
+    },
+    {
+        'selector': 'edge',
+        'style': {
+            'width': 'mapData(weight, 0, 100, 1, 5)'
+        }
+    }
+]
+
+app.layout = html.Div([
+    cyto.Cytoscape(
+        id='language-graph',
+        elements=elements,
+        stylesheet=default_stylesheet,
+        layout={'name': 'circle'},
+        style={'height': '600px', 'width': '100%'}
+    )
+])
+
+@app.callback(
+    Output('language-graph', 'stylesheet'),
+    Input('language-graph', 'tapNodeData'),
+)
+def update_styles(tapNodeData):
+    if not tapNodeData:
+        return default_stylesheet
+
+    new_styles = [
+        {
+            'selector': f'node[id = "{tapNodeData["id"]}"]',
+            'style': {
+                'background-color': '#FF4136'
+            }
+        },
+        {
+            'selector': f'[source = "{tapNodeData["id"]}"]',
+            'style': {
+                'line-color': '#FF4136'
+            }
+        },
+        {
+            'selector': f'[target = "{tapNodeData["id"]}"]',
+            'style': {
+                'line-color': '#FF4136'
+            }
+        }
+    ]
+    return default_stylesheet + new_styles
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
 
