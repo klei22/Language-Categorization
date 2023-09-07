@@ -93,7 +93,7 @@ def circular_plot(matrix):
     max_weight = max(all_weights)
     min_weight = min(all_weights)
 
-    threshold = 0.5  # Only show edges with similarity above 70, for example.
+    threshold = 1  # Only show edges with similarity above 70, for example.
 
     # Add edges with normalized transparency based on similarity
     for lang1 in matrix:
