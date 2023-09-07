@@ -2,6 +2,16 @@
 
 This Python script calculates the similarity between different languages based on their vector representations. It uses the pyvis library to visualize the similarity matrix in a circular plot.
 
+Language clusters are interesting when looking at LLM training.
+
+One could for example:
+
+1. try to train with all data for a specific language group, which should
+   reinforce others and more quickly converge due to similar parts-of-speech
+   ordering.
+2. One could try to train from and test for different langauge groups to test
+   any universality of ones new model.
+
 ## Usage
 
 1. Install the required dependencies:
