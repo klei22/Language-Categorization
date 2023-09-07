@@ -23,9 +23,10 @@ def dot_product(v1, v2):
 
 #     return sum(x*y for x, y in zip(v1, v2))
 
-languages = ['French', 'German', 'Hindi', 'Russian', 'Arabic', 'Indonesian', 'Tagalog', 'Japanese', 'Korean', 'Swahili', 'Portuguese', 'Urdu']
+languages = ['French', 'Spanish', 'German', 'Hindi', 'Russian', 'Arabic', 'Indonesian', 'Tagalog', 'Japanese', 'Korean', 'Swahili', 'Portuguese', 'Urdu']
 vectors = {
     'French': [[[0,0,0,0,1], [0,1,0,0,0], [0,0,1,0,0], [1,0,0,0,0]], [[1,0,0,0,0], [0,1,0,0,0], [0,0,1,0,0], [0,0,0,1,0]]],
+    'Spanish': [[[0,0,0,0,1], [0,1,0,0,0], [0,0,1,0,0], [1,0,0,0,0]], [[0,0,1,0,0], [0,1,0,0,0], [0,0,1,0,0], [0,0,0,1,0]]],
     'German': [[[0,0,0,0,1], [0,1,0,0,0], [0,0,1,0,0], [1,0,0,0,0]], [[1,0,0,0,0], [0,1,0,0,0], [0,0,1,0,0], [0,0,0,1,0]]],
     'Hindi': [[[0,0,1,0,0], [1,0,0,0,0], [0,0,0,0,1], [0,1,0,0,0]], [[0,0,1,0,0], [1,0,0,0,0], [0,0,0,1,0], [0,1,0,0,0]]],
     'Russian': [[[1,0,0,0,0], [0,0,0,1,0], [0,1,0,0,0], [0,0,1,0,0]], [[1,0,0,0,0], [0,0,0,1,0], [0,0,1,0,0], [0,1,0,0,0]]],
@@ -58,7 +59,7 @@ for lang1 in languages:
 print(markdown)
 
 
-def _circular_positions(labels, radius=10000):
+def _circular_positions(labels, radius=1000):
     """
     Generate circular positions for given labels.
 
@@ -77,9 +78,8 @@ def _circular_positions(labels, radius=10000):
         positions[label] = (x, y)
     return positions
 
-
 def circular_plot(matrix):
-    nt = Network(notebook=True, width="100%", height="750px", bgcolor="#222222", font_color="white", heading="")
+    nt = Network(notebook=True, width="100%", height="750px", bgcolor="#222222", font_color="green", heading="")
 
     # Use remote resources
     nt.use_CDN = True
@@ -88,12 +88,23 @@ def circular_plot(matrix):
     for lang in matrix:
         nt.add_node(lang)
 
-    # Add edges
+    # Get max and min similarities for normalization
+    all_weights = [matrix[lang1][lang2] for lang1 in matrix for lang2 in matrix if lang1 != lang2]
+    max_weight = max(all_weights)
+    min_weight = min(all_weights)
+
+    threshold = 0.5  # Only show edges with similarity above 70, for example.
+
+    # Add edges with normalized transparency based on similarity
     for lang1 in matrix:
+
         for lang2 in matrix:
             weight = matrix[lang1][lang2]
-            if lang1 != lang2:
-                nt.add_edge(lang1, lang2, value=weight)
+            normalized_weight = (weight - min_weight) / (max_weight - min_weight)
+            alpha = (0.95 * normalized_weight + 0.05)  # This will normalize between 5% to 100%
+            color = f"rgba(255, 120, 120, {alpha})"
+            if lang1 != lang2 and weight > threshold:
+                nt.add_edge(lang1, lang2, value=weight, color=color)
 
     # Use the circular layout for nodes
     positions = _circular_positions(list(matrix.keys()))
@@ -109,11 +120,12 @@ def circular_plot(matrix):
     nt.show("temp.html")
 
 
+
 # Create the circular plot
 circular_plot(similarity_matrix)
 
 def dynamic_plot(matrix):
-    nt = Network(notebook=True, width="100%", height="750px", bgcolor="#222222", font_color="white", heading="")
+    nt = Network(notebook=True, width="100%", height="1500px", bgcolor="#222222", font_color="blue", heading="")
 
     # Use remote resources
     nt.use_CDN = True
