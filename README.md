@@ -13,7 +13,14 @@ This Python script calculates the similarity between different languages based o
    python language_similarity.py
    ```
 
-3. The script will generate a similarity matrix and display it as a circular plot in a web browser.
+1. The script will generate a similarity matrix and display it as a circular plot in a web browser.
+## Opening on Linux
+
+If the website does not open automatically simply open manually:
+
+```sh
+xdg-open temp.html
+```
 
 ## Example Output
 
