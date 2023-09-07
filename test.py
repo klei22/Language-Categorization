@@ -1,3 +1,5 @@
+import networkx as nx
+import matplotlib.pyplot as plt
 def dot_product(v1, v2):
     # Flatten the vectors
     flat_v1 = [item for sublist in v1 for item in sublist]
@@ -54,3 +56,30 @@ for lang1 in languages:
 
 print(markdown)
 
+
+def plot_graph(matrix, threshold=0.5):
+    # Create a new graph
+    G = nx.Graph()
+    
+    # Add nodes
+    for lang in matrix:
+        G.add_node(lang)
+    
+    # Add weighted edges
+    for lang1 in matrix:
+        for lang2 in matrix:
+            weight = matrix[lang1][lang2]
+            if weight >= threshold and lang1 != lang2:  # Add edges only if weight exceeds a certain threshold and not a self-loop
+                G.add_edge(lang1, lang2, weight=weight)
+    
+    # Draw the graph
+    pos = nx.spring_layout(G)  # use spring layout
+    edges = G.edges(data=True)
+    
+    nx.draw(G, pos, with_labels=True, node_size=700, node_color='skyblue', font_size=15, edge_color=[item[2]['weight'] for item in edges],
+            width=[item[2]['weight'] for item in edges], edge_cmap=plt.cm.Blues)
+    
+    plt.show()
+
+# Plot the graph with a weight threshold of, say, 4 (you can adjust this as needed)
+plot_graph(similarity_matrix, threshold=4)
