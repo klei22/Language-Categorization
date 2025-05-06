@@ -14,14 +14,78 @@ def dot_product(v1, v2):
 
     return sum(x*y for x, y in zip(flat_v1, flat_v2))
 
-# def dot_product(v1, v2):
-#     # Pad vectors to make them of equal length
-#     while len(v1) < len(v2):
-#         v1.append([0, 0, 0, 0, 0])
-#     while len(v2) < len(v1):
-#         v2.append([0, 0, 0, 0, 0])
+    # The encoding is as follows:
 
-#     return sum(x*y for x, y in zip(v1, v2))
+    # Noun (N): 10000
+    # Verb (V): 01000
+    # Pronoun (P): 00100
+    # Proper Noun (PN): 00010
+    # Interrogative Pronoun (IP): 00001
+
+    # French:
+    # "Quel est votre nom? Mon nom est Kauna."
+    # POS: [Interrogative Adjective, Verb, Pronoun, Noun], [Pronoun, Noun, Verb, Proper Noun]
+
+    #     Sentence 1: [00001, 01000, 00100, 10000]
+    #     Sentence 2: [10000, 01000, 00100, 00010]
+
+    # German:
+    #     "Wie ist Ihr Name? Mein Name ist Kauna."
+    #     POS: [Interrogative Adverb, Verb, Pronoun, Noun], [Pronoun, Noun, Verb, Proper Noun]
+
+    #     Sentence 1: [00001, 01000, 00100, 10000]
+    #     Sentence 2: [10000, 01000, 00100, 00010]
+
+    # Hindi:
+    #     "आपका नाम क्या है? मेरा नाम कौना है।"
+    #     POS: [Pronoun, Noun, Interrogative Pronoun, Verb], [Pronoun, Noun, Proper Noun, Verb]
+    #     Sentence 1: [00100, 10000, 00001, 01000]
+    #     Sentence 2: [00100, 10000, 00010, 01000]
+
+# Indonesian:
+#     "Apa nama Anda? Nama saya Kauna."
+#         Sentence 1: [00001, 10000, 00100]
+#         Sentence 2: [10000, 00100, 00010]
+
+# Tagalog:
+
+#     "Ano ang pangalan mo? Ang pangalan ko ay Kauna."
+
+#         Sentence 1: [00001, 10000, 00100]
+#         Sentence 2: [10000, 00100, 01000, 00010]
+
+# Japanese:
+
+#     "あなたの名前は何ですか? 私の名前はカウナです。"
+
+#         Sentence 1: [00100, 10000, 00001, 01000]
+#         Sentence 2: [00100, 10000, 00010, 01000]
+
+# Korean:
+
+#     "당신의 이름은 무엇입니까? 제 이름은 카우나입니다."
+
+#         Sentence 1: [00100, 10000, 00001, 01000]
+#         Sentence 2: [00100, 10000, 00010, 01000]
+
+# Swahili:
+
+#     "Jina lako ni nani? Jina langu ni Kauna."
+
+#         Sentence 1: [10000, 00100, 01000, 00001]
+#         Sentence 2: [10000, 00100, 01000, 00010]
+
+# Portuguese:
+
+#     "Qual é o seu nome? Meu nome é Kauna."
+#         Sentence 1: [00001, 01000, 10000, 00100]
+#         Sentence 2: [00100, 10000, 01000, 00010]
+
+# Urdu:
+
+#     "آپ کا نام کیا ہے؟ میرا نام کاونا ہے۔"
+#         Sentence 1: [00100, 10000, 00001, 01000]
+#         Sentence 2: [00100, 10000, 00010, 01000]
 
 languages = ['French', 'Spanish', 'German', 'Hindi', 'Russian', 'Arabic', 'Indonesian', 'Tagalog', 'Japanese', 'Korean', 'Swahili', 'Portuguese', 'Urdu']
 vectors = {
