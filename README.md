@@ -1,3 +1,5 @@
+![image](part_of_speech_relationships.png)
+
 # Language Similarity Analysis
 
 This Python script calculates the similarity between different languages based on their vector representations. It uses the pyvis library to visualize the similarity matrix in a circular plot.
